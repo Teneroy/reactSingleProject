@@ -53,6 +53,9 @@ var ContactsList = React.createClass({
         var searchQuery = event.target.value.toLowerCase();
         var displayedContacts = CONTACTS.filter(function(el) {
             var searchValue = el.name.toLowerCase();
+            console.log(searchValue.indexOf(searchQuery) !== -1);
+            console.log(el.phoneNumber);
+            if ( (searchValue.indexOf(searchQuery) !== -1) == false ) var searchValue = el.phoneNumber.toLowerCase();
             return searchValue.indexOf(searchQuery) !== -1;
         });
         
@@ -60,7 +63,29 @@ var ContactsList = React.createClass({
             displayedContacts: displayedContacts
         })
         
-        console.log(event.target.value);
+        //console.log(event.target.value);
+    },
+        
+    sortByname () {
+        
+        function QuickSortCom(A) {
+            if (A.length == 0) return [];
+            var a = [], b = [], p = A[0];
+            for (var i = 1; i < A.length; i++) { 
+                if (A[i].name < p.name) a[a.length] = A[i];
+                else b[b.length] = A[i];
+            }
+            return QuickSortCom(a).concat( p,QuickSortCom(b) );
+        }
+        
+        var displayedContacts = QuickSortCom(this.state.displayedContacts);
+        
+        console.log(displayedContacts);
+        
+        this.setState({
+            displayedContacts: displayedContacts
+        })
+        
     },
     
     render () {
@@ -72,6 +97,9 @@ var ContactsList = React.createClass({
             <div>
                 <div className="input-field col s6">
                   <input placeholder="Phone" id="first_name" type="text" className="validate" onChange={this.handleSearch}/>
+                </div>
+                <div>
+                    <a className="waves-effect waves-light btn" onClick={this.sortByname}>Sort by name</a>
                 </div>
                 <ul className="collection">{contentList}</ul>
             </div>
